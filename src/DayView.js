@@ -109,13 +109,12 @@ export default class DayView extends React.PureComponent {
             style={[styles.line, { top: offset * index, width: width - 20 }]}
           />
         ),
-        <TouchableOpacity key={`lineHalf${i}`} style={[
+        <View
+          key={`lineHalf${i}`}
+          style={[
             styles.line,
             { top: offset * (index + 0.5), width: width - 20 },
           ]}
-          onPress={ () => {
-            console.log(`pressing: `, i, index)
-          }}
         />,
       ];
     });
