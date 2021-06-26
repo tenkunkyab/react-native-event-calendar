@@ -75,6 +75,7 @@ export default class EventCalendar extends React.Component {
       end = 24,
       formatHeader,
       upperCaseHeader = false,
+      offset
     } = this.props;
     const date = moment(initDate).add(index - this.props.size, 'days');
 
@@ -95,22 +96,27 @@ export default class EventCalendar extends React.Component {
 
     return (
       <View style={[this.styles.container, { width }]}>
-        <View style={this.styles.header}>
-          <TouchableOpacity
-              style={this.styles.arrowButton}
-              onPress={this._previous}
-          >
-            {leftIcon}
-          </TouchableOpacity>
-          <View style={this.styles.headerTextContainer}>
-            <Text style={this.styles.headerText}>{headerText}</Text>
-          </View>
-          <TouchableOpacity
-              style={this.styles.arrowButton}
-              onPress={this._next}
-          >
-            {rightIcon}
-          </TouchableOpacity>
+        <View style={[this.styles.header, this.props.headerStyle]}>
+          { this.props.renderHeader ? this.props.renderHeader() : (
+            <>
+              <TouchableOpacity
+                style={this.styles.arrowButton}
+                onPress={this._previous}
+              >
+                {leftIcon}
+              </TouchableOpacity>
+              <View style={this.styles.headerTextContainer}>
+                <Text style={this.styles.headerText}>{headerText}</Text>
+              </View>
+              <TouchableOpacity
+                  style={this.styles.arrowButton}
+                  onPress={this._next}
+              >
+                {rightIcon}
+              </TouchableOpacity>
+            </>
+          )}
+          
         </View>
         <DayView
           date={date}
@@ -126,6 +132,7 @@ export default class EventCalendar extends React.Component {
           scrollToFirst={scrollToFirst}
           start={start}
           end={end}
+          offset={offset}
         />
       </View>
     );

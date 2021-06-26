@@ -22,7 +22,7 @@ export default class DayView extends React.PureComponent {
     super(props);
     this.calendarHeight = (props.end - props.start) * 100;
     const width = props.width - LEFT_MARGIN;
-    const packedEvents = populateEvents(props.events, width, props.start);
+    const packedEvents = populateEvents(props.events, width, props.start, props.offset);
     let initPosition =
       _.min(_.map(packedEvents, 'top')) -
       this.calendarHeight / (props.end - props.start);
@@ -36,7 +36,7 @@ export default class DayView extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     const width = nextProps.width - LEFT_MARGIN;
     this.setState({
-      packedEvents: populateEvents(nextProps.events, width, nextProps.start),
+      packedEvents: populateEvents(nextProps.events, width, nextProps.start, nextProps.offset),
     });
   }
 
@@ -80,7 +80,7 @@ export default class DayView extends React.PureComponent {
 
   _renderLines() {
     const { format24h, start, end } = this.props;
-    const offset = this.calendarHeight / (end - start);
+    const offset = this.props.hasOwnProperty('offset') ? this.props.offset : this.calendarHeight / (end - start);
 
     return range(start, end + 1).map((i, index) => {
       let timeText;
@@ -109,15 +109,28 @@ export default class DayView extends React.PureComponent {
             style={[styles.line, { top: offset * index, width: width - 20 }]}
           />
         ),
-        <View
+        <TouchableOpacity key={`lineHalf${i}`} style={[
+            styles.line,
+            { top: offset * (index + 0.5), width: width - 20 },
+          ]}
+          onPress={ () => {
+            console.log(`pressing: `, i, index)
+          }}
+        />,
+      ];
+    });
+    /**
+     *  <View
           key={`lineHalf${i}`}
           style={[
             styles.line,
             { top: offset * (index + 0.5), width: width - 20 },
           ]}
-        />,
-      ];
-    });
+          onPress={ () => {
+            console.log(`pressing: `, i, index)
+          }}
+        />
+     */
   }
 
   _renderTimeLabels() {
@@ -137,6 +150,7 @@ export default class DayView extends React.PureComponent {
   _renderEvents() {
     const { styles } = this.props;
     const { packedEvents } = this.state;
+    console.log({ packedEvents })
     let events = packedEvents.map((event, i) => {
       const style = {
         left: event.left,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, View, Text } from 'react-native';
 
 import EventCalendar from '../src/EventCalendar';
 
@@ -113,10 +113,25 @@ export default class App extends React.Component {
           initDate={'2017-09-07'}
           scrollToFirst
           upperCaseHeader
+          // headerStyle={{
+          //   display: 'none'
+          // }}
+          // renderHeader={ () => (
+          //   <Text>Hey yo</Text>
+          // )}
           uppercase
           scrollToFirst={false}
+          offset={200}
         />
       </View>
     );
   }
 }
+
+
+/**
+ * [ ] Header - customizable - hide
+ * [ ] Height of event container - customizable
+ * [ ] Click event on empty spaces/calendar
+ * [ ] Font/Vertical Axis/Revamp the UI elements
+ */
