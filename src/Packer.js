@@ -57,7 +57,6 @@ function pack(columns, width, calculatedEvents, dayStart, offset) {
 }
 
 function populateEvents(events, screenWidth, dayStart, offset=100) {
-  console.log({ offset })
   let lastEnd;
   let columns;
   let self = this;

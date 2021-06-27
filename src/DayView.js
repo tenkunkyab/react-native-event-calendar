@@ -20,7 +20,7 @@ function range(from, to) {
 export default class DayView extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.calendarHeight = (props.end - props.start) * 100;
+    this.calendarHeight = (props.end - props.start) * props.offset;
     const width = props.width - LEFT_MARGIN;
     const packedEvents = populateEvents(props.events, width, props.start, props.offset);
     let initPosition =
@@ -77,17 +77,28 @@ export default class DayView extends React.PureComponent {
       />
     );
   }
+  
+  _onHourTapped(time) {
+    if (this.props.hourTapped === null) {
+      return;
+    }
+    const {date} = this.props;
+    this.props.hourTapped({date, time})
+  }
 
   _renderLines() {
     const { format24h, start, end } = this.props;
     const offset = this.props.hasOwnProperty('offset') ? this.props.offset : this.calendarHeight / (end - start);
 
     return range(start, end + 1).map((i, index) => {
-      let timeText;
+      let timeText,
+        time = i;
       if (i === start) {
         timeText = ``;
+        time = `0${i}`;
       } else if (i < 12) {
         timeText = !format24h ? `${i} AM` : i;
+        time = `0${i}`;
       } else if (i === 12) {
         timeText = !format24h ? `${i} PM` : i;
       } else if (i === 24) {
@@ -104,32 +115,31 @@ export default class DayView extends React.PureComponent {
           {timeText}
         </Text>,
         i === start ? null : (
-          <View
+          <TouchableOpacity 
+            activeOpacity={0.5}
             key={`line${i}`}
-            style={[styles.line, { top: offset * index, width: width - 20 }]}
-          />
+            onPress={() => {
+              const timeText = `${time}:00`;
+              this._onHourTapped(timeText)
+            }}
+            style={[styles.line, { top: offset * index, width: width - 20, height: offset / 2}]}
+          >
+            <View />
+          </TouchableOpacity>
         ),
-        <View
+        <TouchableOpacity
+          activeOpacity={0.5}
           key={`lineHalf${i}`}
-          style={[
-            styles.line,
-            { top: offset * (index + 0.5), width: width - 20 },
-          ]}
-        />,
-      ];
-    });
-    /**
-     *  <View
-          key={`lineHalf${i}`}
-          style={[
-            styles.line,
-            { top: offset * (index + 0.5), width: width - 20 },
-          ]}
-          onPress={ () => {
-            console.log(`pressing: `, i, index)
+          onPress={() => {
+            const timeText = `${time}:30`;
+            this._onHourTapped(timeText)
           }}
-        />
-     */
+          style={[ styles.line, { top: offset * (index + 0.5), width: width - 20, height: offset / 2 } ]}
+        >
+          <View />
+        </TouchableOpacity>
+      ]
+    });
   }
 
   _renderTimeLabels() {
@@ -149,7 +159,6 @@ export default class DayView extends React.PureComponent {
   _renderEvents() {
     const { styles } = this.props;
     const { packedEvents } = this.state;
-    console.log({ packedEvents })
     let events = packedEvents.map((event, i) => {
       const style = {
         left: event.left,

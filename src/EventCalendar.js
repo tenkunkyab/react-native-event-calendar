@@ -20,8 +20,9 @@ export default class EventCalendar extends React.Component {
 
     const start = props.start ? props.start : 0;
     const end = props.end ? props.end : 24;
+    const offset = props.offset ? props.offset : 100;
 
-    this.styles = styleConstructor(props.styles, (end - start) * 100);
+    this.styles = styleConstructor(props.styles, (end - start) * offset);
     this.state = {
       date: moment(this.props.initDate),
       index: this.props.size,
@@ -116,7 +117,6 @@ export default class EventCalendar extends React.Component {
               </TouchableOpacity>
             </>
           )}
-          
         </View>
         <DayView
           date={date}
@@ -126,6 +126,7 @@ export default class EventCalendar extends React.Component {
           headerStyle={this.props.headerStyle}
           renderEvent={this.props.renderEvent}
           eventTapped={this.props.eventTapped}
+          hourTapped={this.props.hourTapped}
           events={item}
           width={width}
           styles={this.styles}
