@@ -107,6 +107,8 @@ export default class App extends React.Component {
     return (
       <View style={{ flex: 1, marginTop: 20 }}>
         <EventCalendar
+          start={0}
+          end={23}
           eventTapped={this._eventTapped.bind(this)}
           events={this.state.events}
           width={width}
@@ -122,6 +124,9 @@ export default class App extends React.Component {
           uppercase
           scrollToFirst={false}
           offset={200}
+          hourTapped={(data) => {
+            console.log(data)
+          }}
         />
       </View>
     );
@@ -130,8 +135,8 @@ export default class App extends React.Component {
 
 
 /**
- * [ ] Header - customizable - hide
- * [ ] Height of event container - customizable
- * [ ] Click event on empty spaces/calendar
+ * [x] Header - customizable - hide
+ * [c] Height of event container - customizable
+ * [c] Click event on empty spaces/calendar
  * [ ] Font/Vertical Axis/Revamp the UI elements
  */
