@@ -25,7 +25,7 @@ export default class DayView extends React.PureComponent {
     const packedEvents = populateEvents(props.events, width, props.start, props.offset);
     let initPosition =
       _.min(_.map(packedEvents, 'top')) -
-      this.calendarHeight / (props.end - props.start);
+      this.calendarHeight / ((props.end - props.start) * props.offset);
     initPosition = initPosition < 0 ? 0 : initPosition;
     this.state = {
       _scrollY: initPosition,
@@ -56,8 +56,8 @@ export default class DayView extends React.PureComponent {
     }, 1);
   }
 
-  _renderRedLine() {
-    const offset = 100;
+  _renderLineNow() {
+    const offset = this.props.offset ? this.props.offset : 100 ;
     const { format24h } = this.props;
     const { width, styles } = this.props;
     const timeNowHour = moment().hour();
@@ -94,7 +94,7 @@ export default class DayView extends React.PureComponent {
       let timeText,
         time = i;
       if (i === start) {
-        timeText = ``;
+        timeText = !format24h ? `${i} AM`: i;
         time = `0${i}`;
       } else if (i < 12) {
         timeText = !format24h ? `${i} AM` : i;
@@ -107,6 +107,7 @@ export default class DayView extends React.PureComponent {
         timeText = !format24h ? `${i - 12} PM` : i;
       }
       const { width, styles } = this.props;
+
       return [
         <Text
           key={`timeLabel${i}`}
@@ -116,25 +117,25 @@ export default class DayView extends React.PureComponent {
         </Text>,
         i === start ? null : (
           <TouchableOpacity 
-            activeOpacity={0.5}
+            // activeOpacity={0.8}
             key={`line${i}`}
             onPress={() => {
               const timeText = `${time}:00`;
               this._onHourTapped(timeText)
             }}
-            style={[styles.line, { top: offset * index, width: width - 20, height: offset / 2}]}
+            style={[styles.line, { backgroundColor: '#FFFFFF', top: offset * index, width: width - 20, height: offset / 2}]}
           >
             <View />
           </TouchableOpacity>
         ),
         <TouchableOpacity
-          activeOpacity={0.5}
+          // activeOpacity={0.8}
           key={`lineHalf${i}`}
           onPress={() => {
             const timeText = `${time}:30`;
             this._onHourTapped(timeText)
           }}
-          style={[ styles.line, { top: offset * (index + 0.5), width: width - 20, height: offset / 2 } ]}
+          style={[ styles.line, {  backgroundColor: '#FFFFFF', top: offset * (index + 0.5), width: width - 20, height: offset / 2 } ]}
         >
           <View />
         </TouchableOpacity>
@@ -143,11 +144,11 @@ export default class DayView extends React.PureComponent {
   }
 
   _renderTimeLabels() {
-    const { styles, start, end } = this.props;
-    const offset = this.calendarHeight / (end - start);
+    const { styles, start, end, offset } = this.props;
+    const _offset = offset ? offset : this.calendarHeight / (end - start);
     return range(start, end).map((item, i) => {
       return (
-        <View key={`line${i}`} style={[styles.line, { top: offset * i }]} />
+        <View key={`line${i}`} style={[styles.line, { top: _offset * i }]} />
       );
     });
   }
@@ -162,13 +163,14 @@ export default class DayView extends React.PureComponent {
     let events = packedEvents.map((event, i) => {
       const style = {
         left: event.left,
-        height: event.height,
+        height: event.height - 8,
         width: event.width,
-        top: event.top,
-      };
-
-      const eventColor = {
-        backgroundColor: event.color,
+        top: event.top + 4,
+        borderLeftWidth: 4,
+        borderBottomWidth: 0,
+        borderRightWidth: 0,
+        borderTopWidth: 0,
+        borderLeftColor: event.hasOwnProperty('color') ? event.color : '#808080'
       };
 
       // Fixing the number of lines for the event title makes this calculation easier.
@@ -181,7 +183,7 @@ export default class DayView extends React.PureComponent {
           onPress={() =>
             this._onEventTapped(this.props.events[event.index])
           }
-          key={i} style={[styles.event, style, event.color && eventColor]}
+          key={i} style={[style, styles.event]}
         >
           {this.props.renderEvent ? (
             this.props.renderEvent(event)
@@ -224,12 +226,12 @@ export default class DayView extends React.PureComponent {
         ref={ref => (this._scrollView = ref)}
         contentContainerStyle={[
           styles.contentStyle,
-          { width: this.props.width },
+          { width: this.props.width}, //, paddingTop: 250
         ]}
       >
         {this._renderLines()}
         {this._renderEvents()}
-        {this._renderRedLine()}
+        {this._renderLineNow()}
       </ScrollView>
     );
   }

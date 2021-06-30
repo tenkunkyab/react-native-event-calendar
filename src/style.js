@@ -8,11 +8,11 @@ export default function styleConstructor(theme = {}, calendarHeight) {
   let style = {
     container: {
       flex: 1,
-      backgroundColor: '#ffff',
+      backgroundColor: '#ffffff',
       ...theme.container,
     },
     contentStyle: {
-      backgroundColor: '#ffff',
+      backgroundColor: '#ffffff',
       height: calendarHeight + 10,
       ...theme.contentStyle,
     },
@@ -48,9 +48,8 @@ export default function styleConstructor(theme = {}, calendarHeight) {
     },
     event: {
       position: 'absolute',
-      backgroundColor: '#F0F4FF',
-      opacity: 0.8,
-      borderColor: '#DDE5FD',
+      backgroundColor: '#F8F8F8',
+      opacity: 1,
       borderWidth: 1,
       borderRadius: 5,
       paddingLeft: 4,
@@ -87,16 +86,16 @@ export default function styleConstructor(theme = {}, calendarHeight) {
       height: 1,
       position: 'absolute',
       left: leftMargin,
-      borderColor:'rgb(216,216,216)',
+      borderColor:'#dddddd',
       borderWidth: 0.5,
-      backgroundColor: 'rgba(216,216,216,0.4)',
+      backgroundColor: '#ffffff',
       ...theme.line,
     },
     lineNow: {
-      height: 1,
+      height: 2,
       position: 'absolute',
       left: leftMargin,
-      backgroundColor: 'red',
+      backgroundColor: '#0bacf0',
       ...theme.lineNow,
     },
     timeLabel: {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Dimensions, View, Text } from 'react-native';
+import { Dimensions, View, Text, StyleSheet } from 'react-native';
 
 import EventCalendar from '../src/EventCalendar';
-
+import moment from 'moment';
 let { width } = Dimensions.get('window');
 
 export default class App extends React.Component {
@@ -15,13 +15,14 @@ export default class App extends React.Component {
           end: '2017-09-06 23:30:00',
           title: 'Dr. Mariana Joseph',
           summary: '3412 Piedmont Rd NE, GA 3032',
-          color: 'green',
+          color: '#55b560',
         },
         {
           start: '2017-09-07 00:30:00',
           end: '2017-09-07 01:30:00',
           title: 'Dr. Mariana Joseph',
           summary: '3412 Piedmont Rd NE, GA 3032',
+          color: '#55b560',
         },
         {
           start: '2017-09-07 01:30:00',
@@ -107,20 +108,46 @@ export default class App extends React.Component {
     return (
       <View style={{ flex: 1, marginTop: 20 }}>
         <EventCalendar
-          start={0}
-          end={23}
+          start={8}
+          end={22}
           eventTapped={this._eventTapped.bind(this)}
           events={this.state.events}
           width={width}
           initDate={'2017-09-07'}
           scrollToFirst
           upperCaseHeader
-          // headerStyle={{
-          //   display: 'none'
-          // }}
+          headerStyle={{
+            display: 'none'
+          }}
           // renderHeader={ () => (
           //   <Text>Hey yo</Text>
           // )}
+          renderEvent={ (data) => {
+            const TEXT_LINE_HEIGHT = 17;
+            const formatTime = 'hh:mm A';
+            const numberOfLines = Math.floor(data.height / TEXT_LINE_HEIGHT);
+            return (
+              <View>
+                <Text numberOfLines={1} style={styles.eventTitle}>
+                  {data.title || 'Event'}
+                </Text>
+                {numberOfLines > 1 ? (
+                  <Text
+                    numberOfLines={numberOfLines - 1}
+                    style={[styles.eventSummary]}
+                  >
+                    {data.summary || ' '}
+                  </Text>
+                ) : null}
+                {numberOfLines > 2 ? (
+                  <Text style={styles.eventTimes} numberOfLines={1}>
+                    {moment(data.start).format(formatTime)} -{' '}
+                    {moment(data.end).format(formatTime)}
+                  </Text>
+                ) : null}
+                </View>
+            )
+          }}
           uppercase
           scrollToFirst={false}
           offset={200}
@@ -132,6 +159,21 @@ export default class App extends React.Component {
     );
   }
 }
+
+const styles = new StyleSheet.create({
+  eventSummary: {
+    color: '#615B73',
+    fontSize: 12,
+    flexWrap: 'wrap',
+  },
+  eventTimes: {
+    marginTop: 3,
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#615B73',
+    flexWrap: 'wrap',
+  }
+})
 
 
 /**
