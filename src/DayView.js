@@ -115,9 +115,7 @@ export default class DayView extends React.PureComponent {
         >
           {timeText}
         </Text>,
-        i === start ? null : (
           <TouchableOpacity 
-            // activeOpacity={0.8}
             key={`line${i}`}
             onPress={() => {
               const timeText = `${time}:00`;
@@ -127,7 +125,7 @@ export default class DayView extends React.PureComponent {
           >
             <View />
           </TouchableOpacity>
-        ),
+        ,
         <TouchableOpacity
           // activeOpacity={0.8}
           key={`lineHalf${i}`}
@@ -186,7 +184,9 @@ export default class DayView extends React.PureComponent {
           key={i} style={[style, styles.event]}
         >
           {this.props.renderEvent ? (
-            this.props.renderEvent(event)
+            <ScrollView style={{flex: 1}}>
+              {this.props.renderEvent(event)}
+            </ScrollView>
           ) : (
             <View>
               <Text numberOfLines={1} style={styles.eventTitle}>
@@ -222,17 +222,20 @@ export default class DayView extends React.PureComponent {
   render() {
     const { styles } = this.props;
     return (
-      <ScrollView
-        ref={ref => (this._scrollView = ref)}
-        contentContainerStyle={[
-          styles.contentStyle,
-          { width: this.props.width}, //, paddingTop: 250
-        ]}
-      >
-        {this._renderLines()}
-        {this._renderEvents()}
-        {this._renderLineNow()}
-      </ScrollView>
+      <>
+        
+        <ScrollView
+          ref={ref => (this._scrollView = ref)}
+          contentContainerStyle={[
+            styles.contentStyle,
+            { width: this.props.width}, //, paddingTop: 250
+          ]}
+        >
+          {this._renderLines()}
+          {this._renderEvents()}
+          {this._renderLineNow()}
+        </ScrollView>
+      </>
     );
   }
 }

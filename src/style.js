@@ -12,6 +12,7 @@ export default function styleConstructor(theme = {}, calendarHeight) {
       ...theme.container,
     },
     contentStyle: {
+      marginTop: 16,
       backgroundColor: '#ffffff',
       height: calendarHeight + 10,
       ...theme.contentStyle,
@@ -59,7 +60,7 @@ export default function styleConstructor(theme = {}, calendarHeight) {
       paddingBottom: 0,
       flexDirection: 'column',
       alignItems: 'flex-start',
-      overflow: 'hidden',
+      overflow: 'scroll',
       ...theme.event,
     },
     eventTitle: {
