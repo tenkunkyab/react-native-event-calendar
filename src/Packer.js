@@ -102,7 +102,7 @@ function populateEvents(events, screenWidth, dayStart, offset=100) {
   });
 
   if (columns.length > 0) {
-    pack(columns, screenWidth, calculatedEvents, dayStart);
+    pack(columns, screenWidth, calculatedEvents, dayStart, offset);
   }
   return calculatedEvents;
 }
