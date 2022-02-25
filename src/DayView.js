@@ -1,5 +1,5 @@
 // @flow
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import populateEvents from './Packer';
 import React from 'react';
 import moment from 'moment';
@@ -90,55 +90,59 @@ export default class DayView extends React.PureComponent {
     const { format24h, start, end } = this.props;
     const offset = this.props.hasOwnProperty('offset') ? this.props.offset : this.calendarHeight / (end - start);
 
-    return range(start, end + 1).map((i, index) => {
-      let timeText,
-        time = i;
-      if (i === start) {
-        timeText = !format24h ? `${i} AM`: i;
-        time = `0${i}`;
-      } else if (i < 12) {
-        timeText = !format24h ? `${i} AM` : i;
-        time = `0${i}`;
-      } else if (i === 12) {
-        timeText = !format24h ? `${i} PM` : i;
-      } else if (i === 24) {
-        timeText = !format24h ? `12 AM` : 0;
-      } else {
-        timeText = !format24h ? `${i - 12} PM` : i;
-      }
-      const { width, styles } = this.props;
+    return (
+      <View style={Platform.OS === 'android' && { marginTop: 3 }}>
+        {range(start, end + 1).map((i, index) => {
+          let timeText,
+            time = i;
+          if (i === start) {
+            timeText = !format24h ? `${i} AM`: i;
+            time = `0${i}`;
+          } else if (i < 12) {
+            timeText = !format24h ? `${i} AM` : i;
+            time = `0${i}`;
+          } else if (i === 12) {
+            timeText = !format24h ? `${i} PM` : i;
+          } else if (i === 24) {
+            timeText = !format24h ? `12 AM` : 0;
+          } else {
+            timeText = !format24h ? `${i - 12} PM` : i;
+          }
+          const { width, styles } = this.props;
 
-      return [
-        <Text
-          key={`timeLabel${i}`}
-          style={[styles.timeLabel, { top: offset * index - 6 }]}
-        >
-          {timeText}
-        </Text>,
-          <TouchableOpacity 
-            key={`line${i}`}
-            onPress={() => {
-              const timeText = `${time}:00`;
-              this._onHourTapped(timeText)
-            }}
-            style={[styles.line, { backgroundColor: '#FFFFFF', top: offset * index, width: width - 20, height: offset / 2}]}
-          >
-            <View />
-          </TouchableOpacity>
-        ,
-        <TouchableOpacity
-          // activeOpacity={0.8}
-          key={`lineHalf${i}`}
-          onPress={() => {
-            const timeText = `${time}:30`;
-            this._onHourTapped(timeText)
-          }}
-          style={[ styles.line, {  backgroundColor: '#FFFFFF', top: offset * (index + 0.5), width: width - 20, height: offset / 2 } ]}
-        >
-          <View />
-        </TouchableOpacity>
-      ]
-    });
+          return [
+            <Text
+              key={`timeLabel${i}`}
+              style={[styles.timeLabel, { top: offset * index - 6 }]}
+            >
+              {timeText}
+            </Text>,
+            <TouchableOpacity
+              key={`line${i}`}
+              onPress={() => {
+                const timeText = `${time}:00`;
+                this._onHourTapped(timeText)
+              }}
+              style={[styles.line, { backgroundColor: '#FFFFFF', top: offset * index, width: width - 20, height: offset / 2}]}
+            >
+              <View />
+            </TouchableOpacity>
+            ,
+            <TouchableOpacity
+              // activeOpacity={0.8}
+              key={`lineHalf${i}`}
+              onPress={() => {
+                const timeText = `${time}:30`;
+                this._onHourTapped(timeText)
+              }}
+              style={[ styles.line, {  backgroundColor: '#FFFFFF', top: offset * (index + 0.5), width: width - 20, height: offset / 2 } ]}
+            >
+              <View />
+            </TouchableOpacity>
+          ]
+        })}
+      </View>
+    )
   }
 
   _renderTimeLabels() {
