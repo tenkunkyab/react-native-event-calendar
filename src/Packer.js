@@ -2,7 +2,7 @@
 import moment from 'moment';
 
 
-function buildEvent(column, left, width, dayStart, offset=100) {
+function buildEvent(column, left, width, dayStart, offset=130) {
   const startTime = moment(column.start);
   const endTime = column.end
     ? moment(column.end)
@@ -56,7 +56,7 @@ function pack(columns, width, calculatedEvents, dayStart, offset) {
   }
 }
 
-function populateEvents(events, screenWidth, dayStart, offset=100) {
+function populateEvents(events, screenWidth, dayStart, offset=130) {
   let lastEnd;
   let columns;
   let self = this;

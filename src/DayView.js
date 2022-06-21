@@ -57,7 +57,7 @@ export default class DayView extends React.PureComponent {
   }
 
   _renderLineNow() {
-    const offset = this.props.offset ? this.props.offset : 100 ;
+    const offset = this.props.offset ? this.props.offset : 130 ;
     const { format24h } = this.props;
     const { width, styles } = this.props;
     const timeNowHour = moment().hour();
