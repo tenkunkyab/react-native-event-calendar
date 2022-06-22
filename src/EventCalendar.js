@@ -20,7 +20,7 @@ export default class EventCalendar extends React.Component {
 
     const start = props.start ? props.start : 0;
     const end = props.end ? props.end : 24;
-    const offset = props.offset ? props.offset : 100;
+    const offset = props.offset ? props.offset : 130;
 
     this.styles = styleConstructor(props.styles, (end - start) * offset);
     this.state = {
