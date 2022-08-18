@@ -81,24 +81,30 @@ export default class EventCalendar extends React.Component {
     const date = moment(initDate).add(index - this.props.size, 'days');
 
     const leftIcon = this.props.headerIconLeft ? (
-        this.props.headerIconLeft
+      this.props.headerIconLeft
     ) : (
-        <Image source={require('./back.png')} style={this.styles.arrow} />
+      <Image source={require('./back.png')} style={this.styles.arrow} />
     );
     const rightIcon = this.props.headerIconRight ? (
-        this.props.headerIconRight
+      this.props.headerIconRight
     ) : (
-        <Image source={require('./forward.png')} style={this.styles.arrow} />
+      <Image source={require('./forward.png')} style={this.styles.arrow} />
+    );
+
+    const calendarIcon = this.props.calendarIcon ? (
+      this.props.calendarIcon
+    ) : (
+      <Image source={require('./calendar.png')} style={this.styles.arrow} />
     );
 
     let headerText = upperCaseHeader
-        ? date.format(formatHeader || 'DD MMMM YYYY').toUpperCase()
-        : date.format(formatHeader || 'DD MMMM YYYY');
+      ? date.format(formatHeader || 'DD MMMM YYYY').toUpperCase()
+      : date.format(formatHeader || 'DD MMMM YYYY');
 
     return (
       <View style={[this.styles.container, { width }]}>
         <View style={[this.styles.header, this.props.headerStyle]}>
-          { this.props.renderHeader ? this.props.renderHeader() : (
+          {this.props.renderHeader ? this.props.renderHeader() : (
             <>
               <TouchableOpacity
                 style={this.styles.arrowButton}
@@ -106,12 +112,18 @@ export default class EventCalendar extends React.Component {
               >
                 {leftIcon}
               </TouchableOpacity>
-              <View style={this.styles.headerTextContainer}>
+              <View style={this.styles.headerTextContainer} >
                 <Text style={this.styles.headerText}>{headerText}</Text>
+                <TouchableOpacity
+                  style={this.styles.arrowButton}
+                  onPress={this.props.onCalendarPressed}
+                >
+                  {calendarIcon}
+                </TouchableOpacity>
               </View>
               <TouchableOpacity
-                  style={this.styles.arrowButton}
-                  onPress={this._next}
+                style={this.styles.arrowButton}
+                onPress={this._next}
               >
                 {rightIcon}
               </TouchableOpacity>
@@ -141,14 +153,16 @@ export default class EventCalendar extends React.Component {
 
   _goToPage(index) {
     if (index <= 0 || index >= this.props.size * 2) {
-      return;
+      return false;
     }
     const date = moment(this.props.initDate).add(
       index - this.props.size,
       'days'
     );
+  
     this.refs.calendar.scrollToIndex({ index, animated: false });
     this.setState({ index, date });
+    return true
   }
 
   _goToDate(date) {
@@ -156,8 +170,11 @@ export default class EventCalendar extends React.Component {
       this.props.size,
       'days'
     );
-    const index = moment(date).diff(earliestDate, 'days');
-    this._goToPage(index);
+    const prevDate = moment(earliestDate).format("MM-DD-YYYY")
+    const newDate = moment(date).format("MM-DD-YYYY")
+
+    const index = moment(newDate).diff(prevDate, 'days')
+    return this._goToPage(index);  
   }
 
   _previous = () => {
