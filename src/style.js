@@ -30,7 +30,9 @@ export default function styleConstructor(theme = {}, calendarHeight) {
       ...theme.header,
     },
     headerTextContainer: {
+      flexDirection:"row",
       justifyContent: 'center',
+      alignItems:"center"
     },
     headerText: {
       fontSize: 16,
